@@ -9,7 +9,7 @@ const Background = () => {
             position: 'absolute',
             backgroundColor: '#5856D6',
             top: -250,
-            width: SCREEN_WIDTH + 300,
+            width: SCREEN_WIDTH + 400,
             height: SCREEN_HEIGHT + 300,
             transform: [
                 { rotate: '-70deg' },
