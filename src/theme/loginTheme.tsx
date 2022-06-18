@@ -38,7 +38,7 @@ export const loginStyles = StyleSheet.create({
         borderRadius: 100,
     },
 
-    buttonText:{
+    buttonText: {
         fontSize: 18,
         color: 'white',
     },
@@ -47,11 +47,24 @@ export const loginStyles = StyleSheet.create({
         alignItems: 'flex-end',
         marginTop: 10,
     },
-    formContainer:{
+    formContainer: {
         flex: 1,
         paddingHorizontal: 30,
         justifyContent: 'center',
         height: 600,
         marginBottom: 50,
+    },
+
+    buttonReturn: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        position: 'absolute',
+        top: 30,
+        left: 20,
+        borderWidth: 1,
+        borderColor: 'white',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+        borderRadius: 100,
     },
 });
