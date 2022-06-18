@@ -42,4 +42,16 @@ export const loginStyles = StyleSheet.create({
         fontSize: 18,
         color: 'white',
     },
+
+    newUserContainer: {
+        alignItems: 'flex-end',
+        marginTop: 10,
+    },
+    formContainer:{
+        flex: 1,
+        paddingHorizontal: 30,
+        justifyContent: 'center',
+        height: 600,
+        marginBottom: 50,
+    },
 });

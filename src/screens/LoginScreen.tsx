@@ -10,52 +10,69 @@ const LoginScreen = () => {
             {/* background */}
             <Background />
 
-            {/* Keyboard avoid view */}
-            <WhiteLogo />
+            <View style={loginStyles.formContainer}>
 
-            <Text style={loginStyles.title}>Login</Text>
+                {/* Keyboard avoid view */}
+                <WhiteLogo />
 
-            <Text style={loginStyles.label}>Email:</Text>
+                <Text style={loginStyles.title}>Login</Text>
 
-            <TextInput
-                placeholder="Enter your email"
-                placeholderTextColor="rgba(255, 255, 255, 0.4)"
-                keyboardType="email-address"
-                underlineColorAndroid="white"
-                style={[
-                    loginStyles.inputField,
-                    (Platform.OS === 'ios') && loginStyles.inputFieldIos,
-                ]}
-                selectionColor="white"
+                <Text style={loginStyles.label}>Email:</Text>
 
-                // TODO: onchange, value
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
+                <TextInput
+                    placeholder="Enter your email"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    keyboardType="email-address"
+                    underlineColorAndroid="white"
+                    style={[
+                        loginStyles.inputField,
+                        (Platform.OS === 'ios') && loginStyles.inputFieldIos,
+                    ]}
+                    selectionColor="white"
 
-            <TextInput
-                placeholder="*******"
-                placeholderTextColor="rgba(255, 255, 255, 0.4)"
-                underlineColorAndroid="white"
-                style={[
-                    loginStyles.inputField,
-                    (Platform.OS === 'ios') && loginStyles.inputFieldIos,
-                ]}
-                selectionColor="white"
+                    // TODO: onchange, value
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
 
-                // TODO: onchange, value
-                autoCapitalize="none"
-                autoCorrect={false}
-            />
+                <Text style={loginStyles.label}>Password:</Text>
 
-            {/* Login Button */}
-            <View style={loginStyles.buttonContainer}>
-                <TouchableOpacity
-                    activeOpacity={0.8}
-                    style={loginStyles.button}
-                >
-                    <Text style={loginStyles.buttonText}>Login</Text>
-                </TouchableOpacity>
+                <TextInput
+                    placeholder="*******"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    underlineColorAndroid="white"
+                    keyboardType="visible-password"
+                    style={[
+                        loginStyles.inputField,
+                        (Platform.OS === 'ios') && loginStyles.inputFieldIos,
+                    ]}
+                    selectionColor="white"
+
+                    // TODO: onchange, value
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                />
+
+                {/* Login Button */}
+                <View style={loginStyles.buttonContainer}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={loginStyles.button}
+                    >
+                        <Text style={loginStyles.buttonText}>Login</Text>
+                    </TouchableOpacity>
+                </View>
+
+                {/* Create a new account */}
+                <View style={loginStyles.newUserContainer}>
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        onPress={() => console.log('press')}
+                    >
+                        <Text style={loginStyles.buttonText}>Nueva cuenta</Text>
+                    </TouchableOpacity>
+                </View>
+
             </View>
         </>
     );
