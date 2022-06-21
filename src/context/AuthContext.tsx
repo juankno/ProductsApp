@@ -12,8 +12,8 @@ type AuthContextProps = {
     status: 'checking' | 'authenticated' | 'not-authenticated';
     signUp: () => void;
     signIn: (loginData: LoginData) => void;
-    removeError: () => void;
     logout: () => void;
+    removeError: () => void;
 }
 
 interface Props {
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: Props) => {
     }, []);
 
 
-    const validateToken = async() => {
+    const validateToken = async () => {
         const token = await AsyncStorage.getItem('token');
 
         if (!token) { return dispatch({ type: 'notAuthenticated' }); }
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: Props) => {
 
         if (resp.status !== 200) { return dispatch({ type: 'notAuthenticated' }); }
 
-        console.log(resp.data);
+        await AsyncStorage.setItem('token', resp.data.token);
 
         dispatch({
             type: 'signUp',

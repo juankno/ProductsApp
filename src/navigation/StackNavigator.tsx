@@ -4,12 +4,15 @@ import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import { AuthContext } from '../context/AuthContext';
+import LoadingScreen from '../screens/LoadingScreen';
 
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
 
   const { status, token } = useContext(AuthContext);
+
+  if (status === 'checking') { return <LoadingScreen />; }
 
 
   return (
