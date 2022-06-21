@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from 'react';
-import { Usuario } from '../interfaces/loginResponse';
+import productApi from '../api/productApi';
+import { LoginData, LoginResponse, Usuario } from '../interfaces/loginResponse';
 import { authReducer, AuthState } from './AuthReducer';
 
 
@@ -9,7 +10,7 @@ type AuthContextProps = {
     user: Usuario | null;
     status: 'checking' | 'authenticated' | 'not-authenticated';
     signUp: () => void;
-    signIn: () => void;
+    signIn: (loginData: LoginData) => void;
     removeError: () => void;
     logout: () => void;
 }
@@ -33,7 +34,16 @@ export const AuthProvider = ({ children }: Props) => {
     const [state, dispatch] = useReducer(authReducer, authInitialState);
 
     const signUp = () => { };
-    const signIn = () => { };
+    const signIn = async ({ correo, password }: LoginData) => {
+        try {
+
+            const resp = await productApi.post<LoginResponse>('/auth/login', { correo, password });
+            console.log(resp.data);
+
+        } catch (error: any) {
+            console.log(JSON.stringify(error.response.data, null, 3), 'status: ' + error.response.status);
+        }
+    };
     const removeError = () => { };
     const logout = () => { };
 
