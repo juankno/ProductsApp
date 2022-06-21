@@ -39,17 +39,32 @@ export const AuthProvider = ({ children }: Props) => {
     }, []);
 
 
-    const validateToken = async () => {
+    const validateToken = async() => {
         const token = await AsyncStorage.getItem('token');
 
         if (!token) { return dispatch({ type: 'notAuthenticated' }); }
 
+
+        const resp = await productApi.get<LoginResponse>('/auth');
+
+        if (resp.status !== 200) { return dispatch({ type: 'notAuthenticated' }); }
+
+        console.log(resp.data);
+
+        dispatch({
+            type: 'signUp',
+            payload: {
+                token: resp.data.token,
+                user: resp.data.usuario,
+            },
+        });
 
 
     };
 
 
     const signUp = () => { };
+
     const signIn = async ({ correo, password }: LoginData) => {
         try {
 
