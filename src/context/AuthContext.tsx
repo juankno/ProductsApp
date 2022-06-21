@@ -89,7 +89,10 @@ export const AuthProvider = ({ children }: Props) => {
     const removeError = () => {
         dispatch({ type: 'removeError' });
     };
-    const logout = () => { };
+    const logout = async () => {
+        await AsyncStorage.removeItem('token');
+        dispatch({ type: 'logout' });
+    };
 
     return (
         <AuthContext.Provider value={{
