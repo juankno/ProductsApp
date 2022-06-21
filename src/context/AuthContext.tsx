@@ -38,10 +38,16 @@ export const AuthProvider = ({ children }: Props) => {
         try {
 
             const resp = await productApi.post<LoginResponse>('/auth/login', { correo, password });
-            console.log(resp.data);
+             dispatch({
+                type: 'signUp',
+                payload: {
+                    token: resp.data.token,
+                    user: resp.data.usuario,
+                },
+            });
 
         } catch (error: any) {
-            console.log(JSON.stringify(error.response.data, null, 3), 'status: ' + error.response.status);
+            console.log(error.response.data.msg);
         }
     };
     const removeError = () => { };
@@ -49,7 +55,7 @@ export const AuthProvider = ({ children }: Props) => {
 
     return (
         <AuthContext.Provider value={{
-            ...authInitialState,
+            ...state,
             signUp,
             signIn,
             removeError,
