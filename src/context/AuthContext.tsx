@@ -1,4 +1,5 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useEffect, useReducer } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import productApi from '../api/productApi';
 import { LoginData, LoginResponse, Usuario } from '../interfaces/loginResponse';
 import { authReducer, AuthState } from './AuthReducer';
@@ -33,18 +34,35 @@ export const AuthProvider = ({ children }: Props) => {
 
     const [state, dispatch] = useReducer(authReducer, authInitialState);
 
+    useEffect(() => {
+        validateToken();
+    }, []);
+
+
+    const validateToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+
+        if (!token) { return dispatch({ type: 'notAuthenticated' }); }
+
+
+
+    };
+
+
     const signUp = () => { };
     const signIn = async ({ correo, password }: LoginData) => {
         try {
 
-            const resp = await productApi.post<LoginResponse>('/auth/login', { correo, password });
+            const { data } = await productApi.post<LoginResponse>('/auth/login', { correo, password });
             dispatch({
                 type: 'signUp',
                 payload: {
-                    token: resp.data.token,
-                    user: resp.data.usuario,
+                    token: data.token,
+                    user: data.usuario,
                 },
             });
+
+            await AsyncStorage.setItem('token', data.token);
 
         } catch (error: any) {
             dispatch({
