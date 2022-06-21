@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: Props) => {
         try {
 
             const resp = await productApi.post<LoginResponse>('/auth/login', { correo, password });
-             dispatch({
+            dispatch({
                 type: 'signUp',
                 payload: {
                     token: resp.data.token,
@@ -47,10 +47,15 @@ export const AuthProvider = ({ children }: Props) => {
             });
 
         } catch (error: any) {
-            console.log(error.response.data.msg);
+            dispatch({
+                type: 'addError',
+                payload: error.response.data.msg || 'Revisa tus credenciales',
+            });
         }
     };
-    const removeError = () => { };
+    const removeError = () => {
+        dispatch({ type: 'removeError' });
+    };
     const logout = () => { };
 
     return (
