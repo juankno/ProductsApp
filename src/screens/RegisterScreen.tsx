@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StackScreenProps } from '@react-navigation/stack';
-import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import { View, Text, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, Keyboard, ScrollView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import { loginStyles } from '../theme/loginTheme';
 import WhiteLogo from '../components/WhiteLogo';
 import { useForm } from '../hooks/useForm';
+import { AuthContext } from '../context/AuthContext';
 
 interface Props extends StackScreenProps<any, any> { }
 
 const RegisterScreen = ({ navigation }: Props) => {
+
+  const { signUp, errorMessage, removeError } = useContext(AuthContext);
 
   const { email, password, name, form, onChange } = useForm({
     name: '',
@@ -18,9 +21,17 @@ const RegisterScreen = ({ navigation }: Props) => {
   });
 
   const onRegister = () => {
-    console.log({ name, email, password });
     Keyboard.dismiss();
+    signUp({ nombre: name, correo: email, password });
   };
+
+  useEffect(() => {
+    if (errorMessage.length === 0) { return; }
+
+    Alert.alert('Datos de registro incorrectos', errorMessage, [{ text: 'Aceptar', onPress: removeError }]);
+
+  }, [errorMessage]);
+
 
   return (
     <>

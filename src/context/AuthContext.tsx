@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import productApi from '../api/productApi';
-import { LoginData, LoginResponse, Usuario } from '../interfaces/loginResponse';
+import { LoginData, LoginResponse, RegisterData, Usuario } from '../interfaces/loginResponse';
 import { authReducer, AuthState } from './AuthReducer';
 
 
@@ -10,7 +10,7 @@ type AuthContextProps = {
     token: string | null;
     user: Usuario | null;
     status: 'checking' | 'authenticated' | 'not-authenticated';
-    signUp: () => void;
+    signUp: (registerData: RegisterData) => void;
     signIn: (loginData: LoginData) => void;
     logout: () => void;
     removeError: () => void;
@@ -63,7 +63,27 @@ export const AuthProvider = ({ children }: Props) => {
     };
 
 
-    const signUp = () => { };
+    const signUp = async ({ nombre, correo, password }: RegisterData) => {
+        try {
+
+            const { data } = await productApi.post<LoginResponse>('/usuarios', { nombre, correo, password });
+            dispatch({
+                type: 'signUp',
+                payload: {
+                    token: data.token,
+                    user: data.usuario,
+                },
+            });
+
+            await AsyncStorage.setItem('token', data.token);
+
+        } catch (error: any) {
+            dispatch({
+                type: 'addError',
+                payload: error.response.data.errors[0].msg || 'Los datos ingresados no son correctos',
+            });
+        }
+    };
 
     const signIn = async ({ correo, password }: LoginData) => {
         try {
