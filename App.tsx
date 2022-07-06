@@ -3,6 +3,7 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './src/navigation/StackNavigator';
 import { AuthProvider } from './src/context/AuthContext';
+import { ProductsProvider } from './src/context/ProductsContext';
 
 interface PropsState {
   children: JSX.Element | JSX.Element[];
@@ -11,7 +12,9 @@ interface PropsState {
 const AppState = ({ children }: PropsState) => {
   return (
     <AuthProvider>
-      {children}
+      <ProductsProvider>
+        {children}
+      </ProductsProvider>
     </AuthProvider>
   );
 };
