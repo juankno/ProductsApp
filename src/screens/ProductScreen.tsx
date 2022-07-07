@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -6,17 +6,28 @@ import { ProductsStackParams } from '../navigation/ProductsNavigator';
 import { COLORS } from '../theme/constants';
 import { Picker } from '@react-native-picker/picker';
 import useCategories from '../hooks/useCategories';
+import { useForm } from '../hooks/useForm';
+import { ProductsContext } from '../context/ProductsContext';
 
 interface Props extends StackScreenProps<ProductsStackParams, 'ProductScreen'> { }
 
 
 const ProductScreen = ({ navigation, route }: Props) => {
 
-  const { id, name = '' } = route.params;
+  const { id = '', name = '' } = route.params;
 
   const [selectedLanguage, setSelectedLanguage] = useState();
 
   const { categories, isloading } = useCategories();
+
+  const { loadProductById } = useContext(ProductsContext);
+
+  const { _id, categoriaId, nombre, img, form, onChange, setFormValue } = useForm({
+    _id: id,
+    categoriaId: '',
+    nombre: name,
+    img: '',
+  });
 
 
   useEffect(() => {
@@ -24,6 +35,23 @@ const ProductScreen = ({ navigation, route }: Props) => {
       title: (name) ? name.toLowerCase() : 'Nuevo Producto',
     });
   }, []);
+
+  useEffect(() => {
+    loadProduct();
+  }, []);
+
+  const loadProduct = async () => {
+    if (id.length === 0) { return; }
+    const product = await loadProductById(id);
+
+    setFormValue({
+      _id: id,
+      categoriaId: product.categoria._id,
+      img: product.img || '',
+      nombre,
+    });
+    console.log(product);
+  };
 
 
   return (
@@ -33,10 +61,8 @@ const ProductScreen = ({ navigation, route }: Props) => {
         <TextInput
           placeholder="Ingrese el nombre del producto"
           style={styles.input}
-
-        // TODO:
-        // Value
-        // onChangeText
+          value={nombre}
+          onChangeText={(value) => onChange(value, 'nombre')}
         />
 
         {/* picker - Selector */}
@@ -108,6 +134,9 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
         </View>
 
+        <Text>
+          {JSON.stringify(form, null, 5)}
+        </Text>
       </ScrollView>
 
     </View>

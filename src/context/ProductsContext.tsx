@@ -41,8 +41,9 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
 
     const deleteProduct = async (productId: string) => { };
 
-    const loadProductById = async (productId: string) => {
-        throw new Error('Not implemented');
+    const loadProductById = async (productId: string): Promise<Producto> => {
+        const resp = await productApi.get<Producto>(`/productos/${productId}`);
+        return resp.data;
     };
 
     const uploadImage = async (data: any, productId: string) => { }; // TODO: change any type
