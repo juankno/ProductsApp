@@ -4,11 +4,13 @@ import { Producto } from '../interfaces/productsInterface';
 
 interface Props {
     product: Producto;
+    onPress: () => void;
 }
 
-const ProductCardItem = ({ product }: Props) => {
+const ProductCardItem = ({ product, onPress }: Props) => {
     return (
         <TouchableOpacity
+            onPress={onPress}
             activeOpacity={0.8}
         >
             <View style={styles.productCard}>

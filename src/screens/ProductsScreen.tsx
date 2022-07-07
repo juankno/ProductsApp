@@ -1,11 +1,32 @@
-import React, { useContext } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useContext, useEffect } from 'react';
+import { FlatList, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
 import ProductCardItem from '../components/ProductCardItem';
 import { ProductsContext } from '../context/ProductsContext';
+import { ProductsStackParams } from '../navigation/ProductsNavigator';
 
-const ProductsScreen = () => {
+interface Props extends StackScreenProps<ProductsStackParams, 'ProductsScreen'> { }
+
+const ProductsScreen = ({ navigation }: Props) => {
 
   const { products } = useContext(ProductsContext);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            marginRight: 10,
+          }}
+          onPress={() => navigation.navigate('ProductScreen', {})}
+        >
+          <Text>Agregar</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
+
 
   // TODO:: implement pull to refresh
 
@@ -14,7 +35,13 @@ const ProductsScreen = () => {
       <FlatList
         data={products}
         keyExtractor={(product) => product._id}
-        renderItem={({ item }) => <ProductCardItem product={item} />}
+        renderItem={
+          ({ item }) => <ProductCardItem
+            product={item}
+            onPress={
+              () => navigation.navigate('ProductScreen', { id: item._id, name: item.nombre })}
+          />
+        }
       />
     </View>
   );
