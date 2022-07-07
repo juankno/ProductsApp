@@ -1,5 +1,6 @@
 import React, { createContext } from 'react';
 import { Producto } from '../interfaces/productsInterface';
+import { useState } from 'react';
 
 
 type ProductsContextProps = {
@@ -19,9 +20,26 @@ interface ProductsProps {
 }
 export const ProductsProvider = ({ children }: ProductsProps) => {
 
+    const [products, setProducts] = useState<Producto[]>([]);
+
+    const loadProducts = async () => { };
+    const addProduct = async (categoryId: string, productName: string) => { };
+    const updateProduct = async (categoryId: string, productName: string, productId: string) => { };
+    const deleteProduct = async (productId: string) => { };
+    const loadProductById = async (productId: string) => {
+        throw new Error('Not implemented');
+    };
+    const uploadImage = async (data: any, productId: string) => { }; // TODO: change any type
+
     return (
         <ProductsContext.Provider value={{
-
+            products,
+            loadProducts,
+            addProduct,
+            updateProduct,
+            deleteProduct,
+            loadProductById,
+            uploadImage,
         }}>
             {children}
         </ProductsContext.Provider>
