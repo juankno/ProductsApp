@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ProductsStackParams } from '../navigation/ProductsNavigator';
@@ -15,8 +15,6 @@ interface Props extends StackScreenProps<ProductsStackParams, 'ProductScreen'> {
 const ProductScreen = ({ navigation, route }: Props) => {
 
   const { id = '', name = '' } = route.params;
-
-  const [selectedLanguage, setSelectedLanguage] = useState();
 
   const { categories, isloading } = useCategories();
 
@@ -68,10 +66,8 @@ const ProductScreen = ({ navigation, route }: Props) => {
         {/* picker - Selector */}
         <Text style={styles.label}>Categoría:</Text>
         <Picker
-          selectedValue={selectedLanguage}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedLanguage(itemValue)
-          }
+          selectedValue={categoriaId}
+          onValueChange={(value) => onChange(value, 'categoriaId')}
         >
           {
             categories.map((category) => (
@@ -134,9 +130,23 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
         </View>
 
-        <Text>
-          {JSON.stringify(form, null, 5)}
-        </Text>
+        {
+          (img.length > 0) && (
+
+            <Image
+              source={{ uri: img }}
+              style={{
+                marginTop: 20,
+                width: '100%',
+                height: 300,
+              }}
+              resizeMode="contain"
+            />
+          )
+        }
+
+        {/* TODO:: mostrar imagen temporal */}
+
       </ScrollView>
 
     </View>
