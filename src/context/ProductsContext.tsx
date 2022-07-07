@@ -1,6 +1,7 @@
-import React, { createContext } from 'react';
-import { Producto } from '../interfaces/productsInterface';
+import React, { createContext, useEffect } from 'react';
+import { Producto, ProductsResponse } from '../interfaces/productsInterface';
 import { useState } from 'react';
+import productApi from '../api/productApi';
 
 
 type ProductsContextProps = {
@@ -22,13 +23,28 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
 
     const [products, setProducts] = useState<Producto[]>([]);
 
-    const loadProducts = async () => { };
+    useEffect(() => {
+        loadProducts();
+    }, []);
+
+
+    const loadProducts = async () => {
+
+        const resp = await productApi.get<ProductsResponse>('/productos?limite=50');
+        // setProducts([...products, ...resp.data.productos]);
+        setProducts([...resp.data.productos]);
+    };
+
     const addProduct = async (categoryId: string, productName: string) => { };
+
     const updateProduct = async (categoryId: string, productName: string, productId: string) => { };
+
     const deleteProduct = async (productId: string) => { };
+
     const loadProductById = async (productId: string) => {
         throw new Error('Not implemented');
     };
+
     const uploadImage = async (data: any, productId: string) => { }; // TODO: change any type
 
     return (
