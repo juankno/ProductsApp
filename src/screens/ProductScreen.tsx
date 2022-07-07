@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { ProductsStackParams } from '../navigation/ProductsNavigator';
 import { COLORS } from '../theme/constants';
 import { Picker } from '@react-native-picker/picker';
+import useCategories from '../hooks/useCategories';
 
 interface Props extends StackScreenProps<ProductsStackParams, 'ProductScreen'> { }
 
@@ -14,6 +15,8 @@ const ProductScreen = ({ navigation, route }: Props) => {
   const { id, name = '' } = route.params;
 
   const [selectedLanguage, setSelectedLanguage] = useState();
+
+  const { categories, isloading } = useCategories();
 
 
   useEffect(() => {
@@ -43,12 +46,17 @@ const ProductScreen = ({ navigation, route }: Props) => {
           onValueChange={(itemValue, itemIndex) =>
             setSelectedLanguage(itemValue)
           }
-          >
-          <Picker.Item label="Java" value="java" />
-          <Picker.Item label="JavaScript" value="js" />
-          <Picker.Item label="Python" value="py" />
-          <Picker.Item label="php" value="php" />
-          <Picker.Item label="Angular" value="ng" />
+        >
+          {
+            categories.map((category) => (
+              <Picker.Item
+                label={category.nombre}
+                value={category._id}
+                key={category._id}
+              />
+            ))
+          }
+
         </Picker>
 
         <TouchableOpacity
@@ -90,7 +98,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
               padding: 5,
             }}
           >
-            <Icon name="camera-outline" size={30} color={COLORS.white} />
+            <Icon name="images-outline" size={30} color={COLORS.white} />
 
             <Text style={{ ...styles.buttonText, marginLeft: 5 }}>
               Galería
