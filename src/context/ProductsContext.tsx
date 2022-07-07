@@ -35,9 +35,15 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
         setProducts([...resp.data.productos]);
     };
 
-    const addProduct = async (categoryId: string, productName: string) => { };
+    const addProduct = async (categoryId: string, productName: string) => {
+        console.log('add product');
+        console.log({categoryId, productName});
+    };
 
-    const updateProduct = async (categoryId: string, productName: string, productId: string) => { };
+    const updateProduct = async (categoryId: string, productName: string, productId: string) => {
+        console.log('update product');
+        console.log({productId, categoryId, productName});
+    };
 
     const deleteProduct = async (productId: string) => { };
 

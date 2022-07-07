@@ -16,9 +16,9 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
   const { id = '', name = '' } = route.params;
 
-  const { categories, isloading } = useCategories();
+  const { categories } = useCategories();
 
-  const { loadProductById } = useContext(ProductsContext);
+  const { loadProductById, addProduct, updateProduct } = useContext(ProductsContext);
 
   const { _id, categoriaId, nombre, img, form, onChange, setFormValue } = useForm({
     _id: id,
@@ -30,9 +30,9 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: (name) ? name.toLowerCase() : 'Nuevo Producto',
+      title: (nombre) ? nombre.toLowerCase() : 'Sin nombre del producto',
     });
-  }, []);
+  }, [nombre]);
 
   useEffect(() => {
     loadProduct();
@@ -41,14 +41,24 @@ const ProductScreen = ({ navigation, route }: Props) => {
   const loadProduct = async () => {
     if (id.length === 0) { return; }
     const product = await loadProductById(id);
-
     setFormValue({
       _id: id,
       categoriaId: product.categoria._id,
       img: product.img || '',
       nombre,
     });
-    console.log(product);
+  };
+
+  const saveOrUpdateProduct = () => {
+    if (id.length > 0) {
+
+      updateProduct(categoriaId, nombre, id);
+
+    } else {
+
+      const tempCategoriaId = categoriaId || categories[0]._id;
+      addProduct(tempCategoriaId, nombre);
+    }
   };
 
 
@@ -70,11 +80,11 @@ const ProductScreen = ({ navigation, route }: Props) => {
           onValueChange={(value) => onChange(value, 'categoriaId')}
         >
           {
-            categories.map((category) => (
+            categories.map((c) => (
               <Picker.Item
-                label={category.nombre}
-                value={category._id}
-                key={category._id}
+                label={c.nombre}
+                value={c._id}
+                key={c._id}
               />
             ))
           }
@@ -84,51 +94,55 @@ const ProductScreen = ({ navigation, route }: Props) => {
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.button}
+          onPress={saveOrUpdateProduct}
         >
           <Text style={styles.buttonText}>
             Guardar
           </Text>
         </TouchableOpacity>
 
-        {/* save product image */}
-        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{
-              ...styles.button,
-              marginHorizontal: 5,
-              width: 120,
-              flexDirection: 'row',
-              borderRadius: 5,
-              padding: 5,
-            }}
-          >
-            <Icon name="camera-outline" size={30} color={COLORS.white} />
-            <Text style={{ ...styles.buttonText, marginLeft: 5 }}>
-              Camara
-            </Text>
-          </TouchableOpacity>
+        {
+          (_id.length > 0) && (
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  ...styles.button,
+                  marginHorizontal: 5,
+                  width: 120,
+                  flexDirection: 'row',
+                  borderRadius: 5,
+                  padding: 5,
+                }}
+              >
+                <Icon name="camera-outline" size={30} color={COLORS.white} />
+                <Text style={{ ...styles.buttonText, marginLeft: 5 }}>
+                  Camara
+                </Text>
+              </TouchableOpacity>
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={{
-              ...styles.button,
-              marginHorizontal: 5,
-              width: 120,
-              flexDirection: 'row',
-              borderRadius: 5,
-              padding: 5,
-            }}
-          >
-            <Icon name="images-outline" size={30} color={COLORS.white} />
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={{
+                  ...styles.button,
+                  marginHorizontal: 5,
+                  width: 120,
+                  flexDirection: 'row',
+                  borderRadius: 5,
+                  padding: 5,
+                }}
+              >
+                <Icon name="images-outline" size={30} color={COLORS.white} />
 
-            <Text style={{ ...styles.buttonText, marginLeft: 5 }}>
-              Galería
-            </Text>
-          </TouchableOpacity>
+                <Text style={{ ...styles.buttonText, marginLeft: 5 }}>
+                  Galería
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
+        }
 
 
-        </View>
 
         {
           (img.length > 0) && (
@@ -147,9 +161,9 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
         {/* TODO:: mostrar imagen temporal */}
 
-      </ScrollView>
+      </ScrollView >
 
-    </View>
+    </View >
   );
 };
 
