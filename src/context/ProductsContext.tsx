@@ -7,7 +7,7 @@ import productApi from '../api/productApi';
 type ProductsContextProps = {
     products: Producto[];
     loadProducts: () => Promise<void>;
-    addProduct: (categoryId: string, productName: string) => Promise<void>;
+    addProduct: (categoryId: string, productName: string) => Promise<Producto>;
     updateProduct: (categoryId: string, productName: string, productId: string) => Promise<void>;
     deleteProduct: (productId: string) => Promise<void>;
     loadProductById: (productId: string) => Promise<Producto>;
@@ -31,18 +31,37 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
     const loadProducts = async () => {
 
         const resp = await productApi.get<ProductsResponse>('/productos?limite=50');
-        // setProducts([...products, ...resp.data.productos]);
+        // setProducts([...products, ...resp.data.productos]); // TODO: paginate products
         setProducts([...resp.data.productos]);
     };
 
-    const addProduct = async (categoryId: string, productName: string) => {
-        console.log('add product');
-        console.log({categoryId, productName});
+    const addProduct = async (categoryId: string, productName: string): Promise<Producto> => {
+
+            const resp = await productApi.post<Producto>('productos', {
+                nombre: productName,
+                categoria: categoryId,
+            });
+
+            setProducts([...products, resp.data]);
+
+            return resp.data;
+
+
     };
 
     const updateProduct = async (categoryId: string, productName: string, productId: string) => {
-        console.log('update product');
-        console.log({productId, categoryId, productName});
+        try {
+            const resp = await productApi.put<Producto>(`productos/${productId}`, {
+                nombre: productName,
+                categoria: categoryId,
+            });
+
+            setProducts(products.map(product => {
+                return (product._id === productId) ? resp.data : product;
+            }));
+        } catch (error: any) {
+            console.log(error.response.data);
+        }
     };
 
     const deleteProduct = async (productId: string) => { };
