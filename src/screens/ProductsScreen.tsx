@@ -1,15 +1,17 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react';
-import { FlatList, StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, StyleSheet, View, TouchableOpacity, Text, RefreshControl } from 'react-native';
 import ProductCardItem from '../components/ProductCardItem';
 import { ProductsContext } from '../context/ProductsContext';
 import { ProductsStackParams } from '../navigation/ProductsNavigator';
+import { COLORS } from '../theme/constants';
 
 interface Props extends StackScreenProps<ProductsStackParams, 'ProductsScreen'> { }
 
 const ProductsScreen = ({ navigation }: Props) => {
 
-  const { products } = useContext(ProductsContext);
+  const [refreshing, setRefreshing] = useState(false);
+  const { products, loadProducts } = useContext(ProductsContext);
 
   useEffect(() => {
     navigation.setOptions({
@@ -28,11 +30,20 @@ const ProductsScreen = ({ navigation }: Props) => {
   }, []);
 
 
-  // TODO:: implement pull to refresh
+  const getProdutsFromBackend = async () => {
+    setRefreshing(true);
+
+    await loadProducts();
+
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1500);
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
+
         data={products}
         keyExtractor={(product) => product._id}
         renderItem={
@@ -40,6 +51,13 @@ const ProductsScreen = ({ navigation }: Props) => {
             product={item}
             onPress={
               () => navigation.navigate('ProductScreen', { id: item._id, name: item.nombre })}
+          />
+        }
+        refreshControl={
+          <RefreshControl
+            colors={[COLORS.primary]}
+            refreshing={refreshing}
+            onRefresh={getProdutsFromBackend}
           />
         }
       />

@@ -31,7 +31,7 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
     const loadProducts = async () => {
 
         const resp = await productApi.get<ProductsResponse>('/productos?limite=50');
-        // setProducts([...products, ...resp.data.productos]); // TODO: paginate products
+        // TODO: paginate products
         setProducts([...resp.data.productos]);
     };
 

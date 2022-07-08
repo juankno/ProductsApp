@@ -81,7 +81,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
           (!categoriaId && nombre !== '')
             ?
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
-              <ActivityIndicator size={40} color="black" />
+              <ActivityIndicator size={40} color={COLORS.primary} />
             </View>
 
             :
