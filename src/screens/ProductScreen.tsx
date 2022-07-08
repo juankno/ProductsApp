@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { ProductsStackParams } from '../navigation/ProductsNavigator';
@@ -52,7 +52,7 @@ const ProductScreen = ({ navigation, route }: Props) => {
   const saveOrUpdateProduct = async () => {
     if (id.length > 0) {
 
-     updateProduct(categoriaId, nombre, id);
+      updateProduct(categoriaId, nombre, id);
 
     } else {
 
@@ -77,21 +77,31 @@ const ProductScreen = ({ navigation, route }: Props) => {
 
         {/* picker - Selector */}
         <Text style={styles.label}>Categoría:</Text>
-        <Picker
-          selectedValue={categoriaId}
-          onValueChange={(value) => onChange(value, 'categoriaId')}
-        >
-          {
-            categories.map((c) => (
-              <Picker.Item
-                label={c.nombre}
-                value={c._id}
-                key={c._id}
-              />
-            ))
-          }
+        {
+          (!categoriaId && nombre !== '')
+            ?
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }} >
+              <ActivityIndicator size={40} color="black" />
+            </View>
 
-        </Picker>
+            :
+            <Picker
+              selectedValue={categoriaId}
+              onValueChange={(value) => onChange(value, 'categoriaId')}
+            >
+              {
+                categories.map((c) => (
+                  <Picker.Item
+                    label={c.nombre}
+                    value={c._id}
+                    key={c._id}
+                  />
+                ))
+              }
+
+            </Picker>
+        }
+
 
         <TouchableOpacity
           activeOpacity={0.8}
