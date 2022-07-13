@@ -2,6 +2,7 @@ import React, { createContext, useEffect } from 'react';
 import { Producto, ProductsResponse } from '../interfaces/productsInterface';
 import { useState } from 'react';
 import productApi from '../api/productApi';
+import { ImagePickerResponse } from 'react-native-image-picker';
 
 
 type ProductsContextProps = {
@@ -37,14 +38,14 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
 
     const addProduct = async (categoryId: string, productName: string): Promise<Producto> => {
 
-            const resp = await productApi.post<Producto>('productos', {
-                nombre: productName,
-                categoria: categoryId,
-            });
+        const resp = await productApi.post<Producto>('productos', {
+            nombre: productName,
+            categoria: categoryId,
+        });
 
-            setProducts([...products, resp.data]);
+        setProducts([...products, resp.data]);
 
-            return resp.data;
+        return resp.data;
 
 
     };
@@ -71,7 +72,30 @@ export const ProductsProvider = ({ children }: ProductsProps) => {
         return resp.data;
     };
 
-    const uploadImage = async (data: any, productId: string) => { }; // TODO: change any type
+    const uploadImage = async (data: ImagePickerResponse, productId: string) => {
+
+        if (!data.assets) { return; }
+
+        console.log('processing...');
+
+        const fielToUpload = {
+            uri: data.assets[0].uri,
+            type: data.assets[0].type,
+            name: data.assets[0].fileName,
+        };
+
+        const formData = new FormData();
+        formData.append('archivo', fielToUpload);
+
+        try {
+            const resp = await productApi.put(`/uploads/productos/${productId}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+        } catch (error: any) {
+            console.log(JSON.stringify(error.response, null, 2));
+        }
+    };
 
     return (
         <ProductsContext.Provider value={{
