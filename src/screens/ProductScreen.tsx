@@ -81,8 +81,25 @@ const ProductScreen = ({ navigation, route }: Props) => {
       uploadImage(resp, _id);
 
     });
+
   };
 
+  const takePhotoFromGallery = () => {
+    launchImageLibrary({
+      mediaType: 'photo',
+      quality: 0.5,
+    }, (resp) => {
+
+      if (resp.didCancel) { return; }
+
+      if (!resp.assets || !resp.assets[0].uri) { return; }
+
+      setTempUri(resp.assets[0].uri);
+      uploadImage(resp, _id);
+
+    });
+
+  };
 
   return (
     <View style={styles.container}>
@@ -155,7 +172,6 @@ const ProductScreen = ({ navigation, route }: Props) => {
               </TouchableOpacity>
 
               <TouchableOpacity
-                activeOpacity={0.8}
                 style={{
                   ...styles.button,
                   marginHorizontal: 5,
@@ -164,6 +180,8 @@ const ProductScreen = ({ navigation, route }: Props) => {
                   borderRadius: 5,
                   padding: 5,
                 }}
+                activeOpacity={0.8}
+                onPress={takePhotoFromGallery}
               >
                 <Icon name="images-outline" size={30} color={COLORS.white} />
 
